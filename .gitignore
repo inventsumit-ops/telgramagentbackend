@@ -36,7 +36,6 @@ venv.bak/
 .env.production.local
 
 # Database
-*.db
 *.sqlite3
 
 # Session files
