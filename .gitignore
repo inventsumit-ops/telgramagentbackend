@@ -42,6 +42,7 @@ venv.bak/
 # Session files
 *.session
 *.session-journal
+*.session-*
 
 # IDE
 .vscode/

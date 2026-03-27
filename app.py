@@ -54,12 +54,23 @@ def get_client():
     """Get or create Telegram client"""
     global _client
     if _client is None:
+        # Check if running on Vercel (serverless environment)
+        is_serverless = os.getenv('VERCEL') == '1' or os.getenv('AWS_LAMBDA_FUNCTION_NAME')
+        
         if use_bot:
             # Use bot token authentication
-            _client = TelegramClient('bot_session', int(api_id), api_hash, loop=get_event_loop())
+            if is_serverless:
+                # Use in-memory session for serverless
+                _client = TelegramClient(None, int(api_id), api_hash, loop=get_event_loop())
+            else:
+                _client = TelegramClient('bot_session', int(api_id), api_hash, loop=get_event_loop())
         else:
             # Use user account authentication
-            _client = TelegramClient('session_name', int(api_id), api_hash, loop=get_event_loop())
+            if is_serverless:
+                # Use in-memory session for serverless
+                _client = TelegramClient(None, int(api_id), api_hash, loop=get_event_loop())
+            else:
+                _client = TelegramClient('session_name', int(api_id), api_hash, loop=get_event_loop())
     return _client
 
 async def ensure_connected():
