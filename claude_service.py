@@ -13,7 +13,11 @@ class ClaudeAnalyzer:
             logger.warning("Claude API key not configured. Please set CLAUDE_API_KEY in your .env file.")
             self.client = None
         else:
-            self.client = Anthropic(api_key=self.api_key)
+            try:
+                self.client = Anthropic(api_key=self.api_key)
+            except Exception as e:
+                logger.error(f"Failed to initialize Claude client: {e}")
+                self.client = None
     
     def is_configured(self) -> bool:
         """Check if Claude API is properly configured"""
